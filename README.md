@@ -1,5 +1,6 @@
 # litime_mppt_esphome
 ESPHome configuration for LiTime MPPT controllers with bluetooth (BLE)
+I determined that my controller uses MODBUS over BLE, so this project takes advantage of that to interact with the device.
 
 ### Usage
  - litime_solar_mppt.h should not need to be modified in order to get the default functionality out of this project.
