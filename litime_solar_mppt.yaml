@@ -238,35 +238,29 @@ switch:
     name: "LiTime DC Load"
     id: dc_load
     optimistic: true
+    restore_mode: RESTORE_DEFAULT_ON
     turn_on_action:
-      - lambda: |-
-          // Send the command to turn on the load
-          auto *client = id(ltmppt_client);
-          if (client != nullptr && client->connected()) {
+      - ble_client.ble_write:
+          id: ltmppt_client
+          service_uuid: "FFE0"
+          characteristic_uuid: "FFE1"
+          value: !lambda |-
+            ESP_LOGI("mppt", "Sending load ON command");
+
             // Command to turn on load: 010601200001483c
-            uint8_t data[] = {0x01, 0x06, 0x01, 0x20, 0x00, 0x01, 0x48, 0x3c};
-
-            //todo: not sure about the service UUID or characteristic UUID, but looking at the disco logs, this seems to be correct. Not yet tested. (Same for turn_off_action)
-            auto characteristic = client->get_characteristic(0xffe0, 0xffe1);
-            auto status = characteristic->write_value(data, sizeof(data));
-            ESP_LOGI("mppt", "Sent load ON command, status: %d", status);
-          } else {
-            ESP_LOGW("mppt", "Client not connected, cannot send ON command");
-          }
+            vector<uint8_t> request = {0x01, 0x06, 0x01, 0x20, 0x00, 0x01, 0x48, 0x3c};
+            return request;
     turn_off_action:
-      - lambda: |-
-          // Send the command to turn off the load
-          auto *client = id(ltmppt_client);
-          if (client != nullptr && client->connected()) {
-            // Command to turn off load: 01060120000089fc
-            uint8_t data[] = {0x01, 0x06, 0x01, 0x20, 0x00, 0x00, 0x89, 0xfc};
+      - ble_client.ble_write:
+          id: ltmppt_client
+          service_uuid: "FFE0"
+          characteristic_uuid: "FFE1"
+          value: !lambda |-
+            ESP_LOGI("mppt", "Sending load OFF command");
 
-            auto characteristic = client->get_characteristic(0xffe0, 0xffe1);
-            auto status = characteristic->write_value(data, sizeof(data));
-            ESP_LOGI("mppt", "Sent load OFF command, status: %d", status);
-          } else {
-            ESP_LOGW("mppt", "Client not connected, cannot send OFF command");
-          }
+            // Command to turn off load: 01060120000089fc
+            vector<uint8_t> request = {0x01, 0x06, 0x01, 0x20, 0x00, 0x00, 0x89, 0xfc};
+            return request;
 
 # Define the BLE client for the LTMPPT4860
 ble_client:
