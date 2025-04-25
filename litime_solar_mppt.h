@@ -3,7 +3,14 @@ using namespace std;
 
 void HandleResponseData(const vector<uint8_t>& data) {
   if (data.size() < 42) {
-    ESP_LOGW("mppt", "Received data too short: %d", data.size());
+    if (data.size() >=2) {
+      if (data[0] == 0x01 && data[1] == 0x06) {
+        // write operations (0106...) have a shorter return value than we care about here
+      }
+      else {
+        ESP_LOGW("mppt", "Received data too short: %d", data.size());
+      }
+    }
     return;
   }
 
