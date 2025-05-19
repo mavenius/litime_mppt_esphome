@@ -8,7 +8,13 @@ I have read that LiTime controller might be rebranded ones made by HQST, so this
  - In litime_solar_mppt.yaml, update the values in `substitutions` to match your needs (at least the liTimeMacAddress will need to be updated to match your device. You can determine your device's MAC by using a BLE scanner on Android or iOS.)
 
 ### Supported device(s)
-This has been tested with a BT-LTMPPT4860 charge controller.
+This has been tested with the following charge controllers:
+
+ - LiTime BT-LTMPPT4860
+ - LiTime BT-LTMPPT2430
+ - HQST M4860N
+
+More information: It looks like HQST and LiTime both put their name on this controller. The base model is called the M4860 or M4860N (Negative ground). I think the OEM is Helios which lists the model as Venus-M4860 or Venus-M4860N
 
 ### Getting started with ESPHome
 If you don't yet have any experience with ESPHome, I recommend looking here for guidance: https://esphome.io/guides/getting_started_command_line
